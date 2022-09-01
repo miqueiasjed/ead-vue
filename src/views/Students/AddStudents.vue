@@ -15,14 +15,32 @@
                                     <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
                                     <input v-model="student.name" type="text" name="name" id="name" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 
-                                <!-- <div v-if="receita.errors.obs" v-text="receita.errors.obs" class="mt-1 text-xs text-red-500"></div> -->
+                                    <!-- <div v-if="student.errors.obs" v-text="student.errors.obs" class="mt-1 text-xs text-red-500"></div> -->
                                 </div>
 
                                 <div class="col-span-4 sm:col-span-3">
                                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                                     <input v-model="student.email" type="email" name="email" id="email" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 
-                                <!-- <div v-if="receita.errors.obs" v-text="receita.errors.obs" class="mt-1 text-xs text-red-500"></div> -->
+                                    <!-- <div v-if="student.errors.obs" v-text="student.errors.obs" class="mt-1 text-xs text-red-500"></div> -->
+                                </div>
+
+                                <div class="col-span-4 sm:col-span-3">
+                                    <label for="birth_date" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+                                    <input v-model="student.birth_date" type="date" name="birth_date" id="birth_date" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                                
+                                    <!-- <div v-if="student.errors.birth_date" v-text="student.errors.birth_date" class="mt-1 text-xs text-red-500"></div> -->
+                                </div>
+
+                                <div class="col-span-4 sm:col-span-3">
+                                    
+                                    <label for="course_id" class="block text-sm font-medium text-gray-700">Curso</label>
+                                
+                                    <select name="course_id" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option v-for="(course) in courses" :key="course.id" :value='course.id'> {{course.title}} </option>
+                                    </select>
+
+                                    <!-- <div v-if="form.errors.course_id" v-text="form.errors.course_id" class="mt-1 text-xs text-red-500"></div> -->
                                 </div>
                                 
                                 
@@ -41,24 +59,35 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
-import StudentService from '@/services/students.service'
+import { reactive, ref, onMounted } from 'vue'
+import CoursesService from '@/services/courses.service'
 import router from '@/router'
 export default {
     name: 'AddStudents',
     setup() {
+        const courses = ref()
+        
         const student = reactive({
-            course_id: '1',
+            course_id: '',
             name: '',
             email: '',
             birth_date: '',
         })
+        
+        onMounted(async () => {
+            CoursesService.getAll()
+                        .then(response => {
+                            courses.value = response.data.data.data
+                        })
+        })
+        
         const addStudent = () => {
             StudentService.addStudent({...student})
                         .then(() => router.push({name: 'students.index'}))
         }
         return {
             addStudent,
+            courses,
             student
         }
     }

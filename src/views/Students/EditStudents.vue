@@ -31,13 +31,23 @@
             
                 <!-- <div v-if="student.errors.birth_date" v-text="student.errors.birth_date" class="mt-1 text-xs text-red-500"></div> -->
             </div>
+
+            <div class="col-span-4 sm:col-span-3">
+                
+                <label for="course_id" class="block text-sm font-medium text-gray-700">Curso</label>
+            
+                <select v-model="student.course_id" name="course_id" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option v-for="(course) in courses" :key="course.id" :value='course.id'> {{course.title}} </option>
+                </select>
+
+                <!-- <div v-if="form.errors.course_id" v-text="form.errors.course_id" class="mt-1 text-xs text-red-500"></div> -->
+            </div>
             
             </div>
             <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
                 <router-link :to="{name: 'students.index'}" class="text-indigo-600 hover:text-indigo-900">Voltar</router-link>
                 <button type="submit" class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salvar</button>
             </div>
-              
             </div>
           </div>
         </form>
@@ -47,7 +57,7 @@
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import StudentService from '@/services/students.service'
 import router from '@/router'
 export default {
@@ -58,15 +68,21 @@ export default {
         }
     },
     setup(props) {
+        
+        const courses = ref()
+        
         const student = reactive({
             name: '',
             email: '',
             birth_date: '',
             course_id: ''
         })
+        
         onMounted(async () => {
             StudentService.getStudent(props.id)
                         .then(response => {
+                            courses.value = response.data.courses.data
+
                             const studentR = response.data.data
                             student.course_id = studentR.course_id
                             student.name = studentR.name
@@ -74,12 +90,15 @@ export default {
                             student.birth_date = studentR.birth_date
                         })
         })
+        
         const editStudent = () => {
             StudentService.editStudent(props.id, {...student})
                         .then(() => router.push({name: 'students.index'}))
         }
+        
         return {
             editStudent,
+            courses,
             student
         }
     }
