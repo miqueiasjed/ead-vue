@@ -1,10 +1,11 @@
 <template>
-    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ student.name }}</td>
-    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.email }}</td>
-    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.birth_date }}</td>
-    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ student.course.title }}</td>
+    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ student.name }}</td>
+    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ student.email }}</td>
+    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ student.birth_date }}</td>
+    <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
         <router-link :to="{name: 'students.edit', params: {id: student.id}}" class="text-indigo-600 hover:text-indigo-900">Editar</router-link>
-        <a href="#" class="text-red-600 hover:text-red-900 m-2" @click.prevent="deleteStudent">Deletar</a>
+        <a href="#" class="m-2 text-red-600 hover:text-red-900" @click.prevent="deleteStudent">Deletar</a>
     </td>
 </template>
 
