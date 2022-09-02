@@ -9,13 +9,13 @@
                 <form @submit.prevent='addStudent' method="POST">
                     <div class="overflow-hidden shadow sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-6 gap-6">
-                                
+                            
+                            <div class="grid grid-cols-6 gap-6">    
                                 <div class="col-span-4 sm:col-span-3">
                                     <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
                                     <input v-model="student.name" type="text" name="name" id="name" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                                 
-                                    <!-- <div v-if="student.errors.obs" v-text="student.errors.obs" class="mt-1 text-xs text-red-500"></div> -->
+                                    <!-- <div v-if="student.errors.name != ''" v-text="student.errors.name" class="mt-1 text-xs text-red-500"></div> -->
                                 </div>
 
                                 <div class="col-span-4 sm:col-span-3">
@@ -36,7 +36,7 @@
                                     
                                     <label for="course_id" class="block text-sm font-medium text-gray-700">Curso</label>
                                 
-                                    <select name="course_id" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <select v-model="student.course_id" name="course_id" class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                         <option v-for="(course) in courses" :key="course.id" :value='course.id'> {{course.title}} </option>
                                     </select>
 
@@ -61,6 +61,7 @@
 <script>
 import { reactive, ref, onMounted } from 'vue'
 import CoursesService from '@/services/courses.service'
+import StudentService from '@/services/students.service'
 import router from '@/router'
 export default {
     name: 'AddStudents',
@@ -72,6 +73,7 @@ export default {
             name: '',
             email: '',
             birth_date: '',
+            errors: '',
         })
         
         onMounted(async () => {
@@ -83,8 +85,15 @@ export default {
         
         const addStudent = () => {
             StudentService.addStudent({...student})
-                        .then(() => router.push({name: 'students.index'}))
+                        .then(response => {
+                            router.push({name: 'students.index'})
+                        }).catch(function (error) {
+                        if (error) {
+                            student.errors = error.response.data.errors
+                        }
+                    })
         }
+        
         return {
             addStudent,
             courses,

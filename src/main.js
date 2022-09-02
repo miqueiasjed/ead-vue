@@ -1,14 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import axios from 'axios'
-import { URL_API } from './configs/api'
 import './index.css'
 
-const app = createApp(App)
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = URL_API
+const app = createApp(App)
 
 app.use(router)
 

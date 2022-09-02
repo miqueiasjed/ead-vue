@@ -94,6 +94,7 @@ export default {
         const editStudent = () => {
             StudentService.editStudent(props.id, {...student})
                         .then(() => router.push({name: 'students.index'}))
+                        
         }
         
         return {

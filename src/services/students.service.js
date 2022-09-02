@@ -1,29 +1,39 @@
-import axios from 'axios'
+import Api from "../configs/api";
 
 export default class StudentService {
 
-    static async getAll() {
-        return axios.get('/students')
+    async getAll() {
+        await Csrf.getCookie();
+
+        return Api.get('/students')
     }
 
-    static async addStudent(params)
+    async addStudent(params)
     {
-        return axios.post('/students', params)
+        await Csrf.getCookie();
+
+        return Api.post('/students', params)
     }
 
-    static async editStudent(id, params)
+    async editStudent(id, params)
     {
-        return axios.put(`/students/${id}`, params)
+        await Csrf.getCookie();
+
+        return Api.put(`/students/${id}`, params)
     }
 
-    static async getStudent(id)
+    async getStudent(id)
     {
-        return axios.get(`/students/${id}`)
+        await Csrf.getCookie();
+
+        return Api.get(`/students/${id}`)
     }
 
-    static async deleteStudent(id)
+    async deleteStudent(id)
     {
-        return axios.delete(`/students/${id}`)
+        await Csrf.getCookie();
+
+        return Api.delete(`/students/${id}`)
     }
 
 }
